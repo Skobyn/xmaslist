@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   },
   description: 'Create and manage your Christmas wishlists with ease',
   keywords: ['christmas', 'wishlist', 'gifts', 'holidays'],
-  authors: [{ name: 'XmasList Team' }],
-  creator: 'XmasList',
+  authors: [{ name: 'FamBamXmas Team' }],
+  creator: 'FamBamXmas',
   openGraph: {
     type: 'website',
     locale: 'en_US',

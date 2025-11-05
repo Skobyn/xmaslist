@@ -69,6 +69,7 @@ export default function HomePage() {
 
   // Load user's locations
   const loadLocations = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase
         .from('locations')
@@ -79,6 +80,8 @@ export default function HomePage() {
       setLocations(data || []);
     } catch (error) {
       console.error('Error loading locations:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

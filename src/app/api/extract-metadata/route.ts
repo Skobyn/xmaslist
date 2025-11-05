@@ -324,7 +324,7 @@ export async function POST(request: NextRequest) {
 
     const successful = processedResults.filter((r) => r.success).length;
     const failed = processedResults.filter((r) => !r.success).length;
-    const cached = processedResults.filter((r) => r.cached).length;
+    const cached = processedResults.filter((r) => r.success && r.cached).length;
     const processingTime = Date.now() - startTime;
 
     const response: BatchExtractMetadataResponse = {

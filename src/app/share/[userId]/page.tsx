@@ -199,7 +199,7 @@ export default function PublicUserSharePage() {
           <Stack align="center" gap="md">
             <Group gap="xs">
               <IconGift size={40} color="#EF4444" />
-              <Text size="xl" c="white" fw={800}>XmasList</Text>
+              <Text size="xl" c="white" fw={800}>FamBamXmas</Text>
               <Badge
                 size="lg"
                 variant="gradient"
@@ -289,7 +289,7 @@ export default function PublicUserSharePage() {
               size="lg"
               className="button-festive"
             >
-              Get Started with XmasList
+              Get Started with FamBamXmas
             </Button>
           </Stack>
         </Container>

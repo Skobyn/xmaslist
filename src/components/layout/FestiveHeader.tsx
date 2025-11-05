@@ -58,7 +58,7 @@ export function FestiveHeader({ user }: FestiveHeaderProps) {
             <Group gap="xs">
               <IconGift size={32} color="#EF4444" />
               <Text size="xl" fw={800} style={{ letterSpacing: '-0.02em' }}>
-                XmasList
+                FamBamXmas
               </Text>
               <Badge
                 size="sm"

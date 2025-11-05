@@ -6,8 +6,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'XmasList - Your Christmas Wishlist Manager',
-    template: '%s | XmasList',
+    default: 'FamBamXmas - Your Christmas Wishlist Manager',
+    template: '%s | FamBamXmas',
   },
   description: 'Create and manage your Christmas wishlists with ease',
   keywords: ['christmas', 'wishlist', 'gifts', 'holidays'],
@@ -17,15 +17,15 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_APP_URL,
-    title: 'XmasList - Your Christmas Wishlist Manager',
+    title: 'FamBamXmas - Your Christmas Wishlist Manager',
     description: 'Create and manage your Christmas wishlists with ease',
-    siteName: 'XmasList',
+    siteName: 'FamBamXmas',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'XmasList - Your Christmas Wishlist Manager',
+    title: 'FamBamXmas - Your Christmas Wishlist Manager',
     description: 'Create and manage your Christmas wishlists with ease',
-    creator: '@xmaslist',
+    creator: '@fambamxmas',
   },
   robots: {
     index: true,

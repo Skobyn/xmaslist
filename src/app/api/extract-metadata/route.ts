@@ -14,7 +14,6 @@ import type {
 import { extractMetadata, extractMetadataBatch } from '@/lib/metadata/metadata-extractor';
 import { validateUrl } from '@/lib/metadata/url-validator';
 import { getCache, getCacheStats } from '@/lib/metadata/cache';
-import { detectRetailer, isSupportedRetailer } from '@/lib/metadata/retailer-detector';
 
 // ============================================================================
 // Rate Limiting (Simple In-Memory Implementation)

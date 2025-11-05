@@ -95,10 +95,11 @@ export function FestiveHeader({ user }: FestiveHeaderProps) {
 
                     <Menu.Dropdown>
                       <Menu.Label>Account</Menu.Label>
-                      <Menu.Item leftSection={<IconUser size={16} />}>
-                        Profile
-                      </Menu.Item>
-                      <Menu.Item leftSection={<IconSettings size={16} />}>
+                      <Menu.Item
+                        leftSection={<IconSettings size={16} />}
+                        component="a"
+                        href="/settings"
+                      >
                         Settings
                       </Menu.Item>
                       <Menu.Divider />

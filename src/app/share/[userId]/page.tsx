@@ -63,12 +63,12 @@ export default function PublicUserSharePage() {
         // Get user info
         const { data: userData, error: userError } = await supabase
           .from('users')
-          .select('email')
+          .select('email, display_name')
           .eq('id', userId)
           .single();
 
         if (userError) throw new Error('User not found');
-        setOwnerEmail(userData.email || 'Someone');
+        setOwnerEmail(userData.display_name || userData.email?.split('@')[0] || 'Someone');
 
         // Get all locations for this user
         const { data: locations, error: locationsError } = await supabase

@@ -1,0 +1,58 @@
+# Supabase Configuration File
+# Documentation: https://supabase.com/docs/guides/cli/config
+
+[api]
+# Port to use for the API URL
+port = 54321
+# Schemas to expose in your API. Tables, views and stored procedures in this schema will get API endpoints.
+schemas = ["public", "storage"]
+# Extra schemas to add to the search_path of every request.
+extra_search_path = ["public"]
+# The maximum number of rows returned by each query.
+max_rows = 1000
+
+[db]
+# Port to use for the local database URL
+port = 54322
+# The database major version to use. This must be the same as the version used on Supabase.
+major_version = 15
+
+[studio]
+# Port to use for Supabase Studio
+port = 54323
+
+[inbucket]
+# Port to use for the email testing server (Inbucket)
+port = 54324
+
+[storage]
+# The maximum file size allowed (in MiB)
+file_size_limit = "50MiB"
+
+[auth]
+# Enable anonymous sign-ins
+enable_signup = true
+
+[auth.email]
+# Allow/disallow new user signups via email to your project
+enable_signup = true
+# Enable email confirmations
+enable_confirmations = false
+
+[auth.sms]
+# Allow/disallow new user signups via SMS to your project
+enable_signup = false
+
+# Configure one of the supported SMS providers: `twilio`, `messagebird`, `textlocal`, `vonage`
+[auth.sms.twilio]
+enabled = false
+
+[auth.external.google]
+enabled = false
+
+[auth.external.github]
+enabled = false
+
+[realtime]
+# Enable or disable the Realtime service
+enabled = true

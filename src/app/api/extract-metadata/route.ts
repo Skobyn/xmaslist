@@ -11,7 +11,7 @@ import type {
   BatchExtractMetadataResponse,
   ErrorCode,
 } from '@/types/metadata';
-import { extractMetadata, extractMetadataBatch } from '@/lib/metadata/metadata-extractor';
+import { extractMetadata } from '@/lib/metadata/metadata-extractor';
 import { validateUrl } from '@/lib/metadata/url-validator';
 import { getCache, getCacheStats } from '@/lib/metadata/cache';
 

@@ -29,6 +29,7 @@ import {
   IconShoppingCart,
   IconStar,
   IconStarFilled,
+  IconRefresh,
 } from '@tabler/icons-react';
 import { supabase } from '@/lib/supabase/client';
 import { FestiveHeader } from '@/components/layout/FestiveHeader';

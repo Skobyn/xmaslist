@@ -249,7 +249,7 @@ export default function RetailerDetailPage() {
             <Grid gutter="lg">
               {items.map((item) => (
                 <Grid.Col key={item.id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
-                  <ItemCard item={item} onEdit={handleEditItem} />
+                  <ItemCard item={item} onEdit={handleEditItem} onRefresh={loadData} />
                 </Grid.Col>
               ))}
             </Grid>
@@ -283,9 +283,48 @@ export default function RetailerDetailPage() {
 interface ItemCardProps {
   item: Item;
   onEdit?: (item: Item) => void;
+  onRefresh?: () => void;
 }
 
-function ItemCard({ item, onEdit }: ItemCardProps) {
+function ItemCard({ item, onEdit, onRefresh }: ItemCardProps) {
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const handleRefreshPrice = async () => {
+    if (!item.url) return;
+
+    setRefreshing(true);
+    try {
+      const encodedUrl = encodeURIComponent(item.url);
+      const response = await fetch(`/api/extract-metadata?url=${encodedUrl}`);
+
+      if (!response.ok) throw new Error('Failed to fetch metadata');
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        const priceInCents = result.data.price ? Math.round(Number(result.data.price) * 100) : null;
+
+        const { error } = await supabase
+          .from('items')
+          .update({
+            title: result.data.title || item.title,
+            description: result.data.description || item.description,
+            image_url: result.data.image || item.image_url,
+            price: priceInCents,
+            last_price_check: new Date().toISOString(),
+          })
+          .eq('id', item.id);
+
+        if (error) throw error;
+        onRefresh?.();
+      }
+    } catch (err) {
+      console.error('Failed to refresh price:', err);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return (
     <Card
       shadow="sm"
@@ -345,6 +384,17 @@ function ItemCard({ item, onEdit }: ItemCardProps) {
               >
                 Edit
               </Menu.Item>
+              {item.url && (
+                <Menu.Item
+                  leftSection={<IconRefresh size={16} />}
+                  onClick={handleRefreshPrice}
+                  disabled={refreshing}
+                  color="emeraldGreen"
+                >
+                  {refreshing ? 'Refreshing...' : 'Refresh Price'}
+                </Menu.Item>
+              )}
+              <Menu.Divider />
               <Menu.Item
                 color="red"
                 leftSection={<IconTrash size={16} />}
@@ -395,6 +445,12 @@ function ItemCard({ item, onEdit }: ItemCardProps) {
           >
             View Product
           </Button>
+        )}
+
+        {item.last_price_check && (
+          <Text size="xs" c="dimmed" ta="center">
+            Updated {new Date(item.last_price_check).toLocaleDateString()}
+          </Text>
         )}
       </Stack>
     </Card>

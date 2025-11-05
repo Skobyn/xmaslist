@@ -40,6 +40,7 @@ import { AuthModal } from '@/components/auth/AuthModal';
 import { CreateRetailerModal } from '@/components/retailers/CreateRetailerModal';
 import { EditRetailerModal } from '@/components/retailers/EditRetailerModal';
 import { UserShareModal } from '@/components/share/UserShareModal';
+import { useAuth } from '@/providers/AuthProvider';
 
 /**
  * Bold Festive Modern Home Page
@@ -47,7 +48,7 @@ import { UserShareModal } from '@/components/share/UserShareModal';
  */
 export default function HomePage() {
   const router = useRouter();
-  const [user, setUser] = React.useState<any>(null);
+  const { user, loading: authLoading } = useAuth();
   const [locations, setLocations] = React.useState<Location[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [authModalOpened, { open: openAuthModal, close: closeAuthModal }] = useDisclosure(false);
@@ -56,32 +57,15 @@ export default function HomePage() {
   const [shareOpened, { open: openShare, close: closeShare }] = useDisclosure(false);
   const [selectedRetailer, setSelectedRetailer] = React.useState<Location | null>(null);
 
-  // Check authentication and load locations
+  // Load locations when user changes
   React.useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-
-      if (user) {
-        await loadLocations();
-      }
+    if (user) {
+      loadLocations();
+    } else {
+      setLocations([]);
       setLoading(false);
-    };
-
-    checkAuth();
-
-    // Subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        loadLocations();
-      } else {
-        setLocations([]);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+    }
+  }, [user]);
 
   // Load user's locations
   const loadLocations = async () => {
@@ -114,7 +98,7 @@ export default function HomePage() {
     openEditRetailer();
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <Box
         style={{
@@ -135,7 +119,7 @@ export default function HomePage() {
 
   return (
     <Box style={{ minHeight: '100vh' }}>
-      <FestiveHeader user={user} />
+      <FestiveHeader />
 
       {!user ? (
         // ============================================

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import { mantineTheme } from '@/theme/mantine';
+import { AuthProvider } from '@/providers/AuthProvider';
+import { createClient } from '@/lib/supabase/server';
 import '@mantine/core/styles.css';
 import './globals.css';
 
@@ -33,11 +35,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -45,7 +52,9 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider theme={mantineTheme} defaultColorScheme="light">
-          {children}
+          <AuthProvider initialSession={session}>
+            {children}
+          </AuthProvider>
         </MantineProvider>
       </body>
     </html>

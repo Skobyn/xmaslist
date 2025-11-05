@@ -23,10 +23,11 @@ import {
 } from '@tabler/icons-react';
 import { supabase } from '@/lib/supabase/client';
 import { FestiveHeader } from '@/components/layout/FestiveHeader';
+import { useAuth } from '@/providers/AuthProvider';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const [user, setUser] = React.useState<any>(null);
+  const { user } = useAuth();
   const [displayName, setDisplayName] = React.useState('');
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
@@ -35,14 +36,10 @@ export default function SettingsPage() {
 
   React.useEffect(() => {
     const loadUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-
       if (!user) {
         router.push('/');
         return;
       }
-
-      setUser(user);
 
       // Load user profile from users table
       const { data: profile } = await supabase
@@ -59,7 +56,7 @@ export default function SettingsPage() {
     };
 
     loadUser();
-  }, [router]);
+  }, [user, router]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,7 +94,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <Box style={{ minHeight: '100vh', backgroundColor: '#F9FAFB' }}>
-        <FestiveHeader user={user} />
+        <FestiveHeader />
         <Container size="sm" py="xl">
           <Text>Loading...</Text>
         </Container>
@@ -107,7 +104,7 @@ export default function SettingsPage() {
 
   return (
     <Box style={{ minHeight: '100vh', backgroundColor: '#F9FAFB' }}>
-      <FestiveHeader user={user} />
+      <FestiveHeader />
 
       <Container size="sm" py="xl">
         <Stack gap="xl">

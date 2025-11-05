@@ -24,19 +24,16 @@ import {
   IconSettings,
   IconBell,
 } from '@tabler/icons-react';
-import { supabase } from '@/lib/supabase/client';
 import { AuthModal } from '@/components/auth/AuthModal';
+import { useAuth } from '@/providers/AuthProvider';
 
-interface FestiveHeaderProps {
-  user?: any;
-}
-
-export function FestiveHeader({ user }: FestiveHeaderProps) {
+export function FestiveHeader() {
+  const { user, signOut } = useAuth();
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [authModalOpened, { open: openAuthModal, close: closeAuthModal }] = useDisclosure(false);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    await signOut();
     closeDrawer();
   };
 

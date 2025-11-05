@@ -55,7 +55,7 @@ function checkRateLimit(identifier: string): { allowed: boolean; resetTime?: num
 function getClientIdentifier(request: NextRequest): string {
   // Use IP address or fallback to a default
   const forwarded = request.headers.get('x-forwarded-for');
-  const ip: string = forwarded ? forwarded.split(',')[0] : (request.headers.get('x-real-ip') ?? 'unknown');
+  const ip: string = forwarded ? (forwarded.split(',')[0] ?? 'unknown') : (request.headers.get('x-real-ip') ?? 'unknown');
   return ip;
 }
 

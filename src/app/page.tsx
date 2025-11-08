@@ -67,13 +67,20 @@ export default function HomePage() {
     }
   }, [user]);
 
-  // Load user's locations
+  // Load user's locations (owner-only, user-isolated)
   const loadLocations = async () => {
     setLoading(true);
     try {
+      if (!user?.id) {
+        setLocations([]);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('locations')
         .select('*')
+        .eq('owner_id', user.id) // Only fetch user's own locations
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -497,6 +504,8 @@ interface LocationCardProps {
 }
 
 function LocationCard({ location, onClick, onEdit }: LocationCardProps) {
+  const [logoError, setLogoError] = React.useState(false);
+
   return (
     <Card
       shadow="sm"
@@ -512,7 +521,7 @@ function LocationCard({ location, onClick, onEdit }: LocationCardProps) {
     >
       <Stack gap="md">
         <Group justify="space-between">
-          {(location as any).logo_url ? (
+          {location.logo_url && !logoError ? (
             <Box
               onClick={onClick}
               style={{
@@ -529,8 +538,9 @@ function LocationCard({ location, onClick, onEdit }: LocationCardProps) {
               }}
             >
               <img
-                src={(location as any).logo_url}
+                src={location.logo_url}
                 alt={location.name}
+                onError={() => setLogoError(true)}
                 style={{
                   width: '100%',
                   height: '100%',

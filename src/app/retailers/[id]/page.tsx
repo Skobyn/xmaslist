@@ -81,27 +81,34 @@ export default function RetailerDetailPage() {
 
   const retailerId = params.id as string;
 
-  // Load data function
+  // Load data function (user-isolated)
   const loadData = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
 
-        // Load retailer
+        if (!user?.id) {
+          setLoading(false);
+          return;
+        }
+
+        // Load retailer (only if user owns it)
         const { data: locationData, error: locationError } = await supabase
           .from('locations')
           .select('*')
           .eq('id', retailerId)
+          .eq('owner_id', user.id) // Ensure user owns this location
           .single();
 
         if (locationError) throw locationError;
         setRetailer(locationData);
 
-        // Load items through lists
+        // Load items through lists (only from user's lists)
         const { data: lists, error: listsError } = await supabase
           .from('lists')
           .select('*')
-          .eq('location_id', retailerId);
+          .eq('location_id', retailerId)
+          .eq('owner_id', user.id); // Ensure user owns these lists
 
         if (listsError) throw listsError;
 

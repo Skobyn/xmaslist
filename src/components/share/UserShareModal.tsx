@@ -24,13 +24,39 @@ interface UserShareModalProps {
 
 export function UserShareModal({ opened, onClose, userId }: UserShareModalProps) {
   const [shareUrl, setShareUrl] = React.useState<string>('');
+  const [isSharing, setIsSharing] = React.useState(false);
 
   React.useEffect(() => {
     if (opened && userId) {
-      const url = `${window.location.origin}/share/${userId}`;
-      setShareUrl(url);
+      enablePublicSharing();
     }
   }, [opened, userId]);
+
+  const enablePublicSharing = async () => {
+    setIsSharing(true);
+    try {
+      // Import supabase dynamically
+      const { supabase } = await import('@/lib/supabase/client');
+
+      // Mark all user's lists as public for sharing
+      const { error } = await supabase
+        .from('lists')
+        .update({ is_public: true })
+        .eq('owner_id', userId);
+
+      if (error) {
+        console.error('Error enabling public sharing:', error);
+      }
+
+      // Generate share URL
+      const url = `${window.location.origin}/u/${userId}`;
+      setShareUrl(url);
+    } catch (err) {
+      console.error('Failed to enable sharing:', err);
+    } finally {
+      setIsSharing(false);
+    }
+  };
 
   const handleClose = () => {
     onClose();

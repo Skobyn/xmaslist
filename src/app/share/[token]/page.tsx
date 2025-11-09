@@ -83,15 +83,29 @@ export default function SharedListPage() {
     setError(null);
 
     try {
-      // Find list by guest_access_token
+      // First, try to find by guest_access_token (individual list sharing)
       const { data: listData, error: listError } = await supabase
         .from('lists')
         .select('*, locations(*)')
         .eq('guest_access_token', token)
-        .eq('is_public', true) // Only show if list is marked as public
+        .eq('is_public', true)
         .single();
 
+      // If not found as guest token, try as userId (share all)
       if (listError || !listData) {
+        // Check if token is a valid user ID - redirect to /u/[userId]
+        const { data: userData } = await supabase
+          .from('users')
+          .select('id')
+          .eq('id', token)
+          .single();
+
+        if (userData) {
+          // Redirect to the user profile route
+          window.location.href = `/u/${token}`;
+          return;
+        }
+
         setError('This list does not exist or is no longer shared.');
         setLoading(false);
         return;
